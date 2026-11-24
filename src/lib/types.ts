@@ -23,6 +23,8 @@ export interface Categoria {
   moneda: Moneda
   activa: boolean
   orden: number
+  /** % del total que pagás vos (100 = todo) */
+  porcentaje: number
 }
 
 export interface Gasto {

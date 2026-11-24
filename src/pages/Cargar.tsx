@@ -65,6 +65,11 @@ function FilaFija({ f, cat, periodo }: { f: Finanzas; cat: Categoria; periodo: s
         <div className="truncate text-sm font-medium">{cat.nombre}</div>
         <div className="text-xs text-white/40">
           {cat.frecuencia !== 'mensual' && <span className="mr-2 capitalize">{cat.frecuencia}</span>}
+          {cat.porcentaje < 100 && (
+            <span className="mr-2 text-brand-400">
+              Tu {cat.porcentaje.toLocaleString('es-AR')}%{actual > 0 && `: ${fmtMoney((actual * cat.porcentaje) / 100, moneda)}`}
+            </span>
+          )}
           {anterior > 0 && <>mes ant. {fmtMoney(anterior, moneda)}</>}
         </div>
       </div>

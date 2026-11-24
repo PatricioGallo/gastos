@@ -29,7 +29,11 @@ export const useGrupos = () =>
   useQuery({ queryKey: ['grupos'], queryFn: () => fetchAll<Grupo>('grupos', ['orden', 'nombre']) })
 
 export const useCategorias = () =>
-  useQuery({ queryKey: ['categorias'], queryFn: () => fetchAll<Categoria>('categorias', ['orden', 'nombre']) })
+  useQuery({
+    queryKey: ['categorias'],
+    queryFn: async () =>
+      (await fetchAll<Categoria>('categorias', ['orden', 'nombre'])).map((c) => ({ ...c, porcentaje: Number(c.porcentaje ?? 100) })),
+  })
 
 export const useGastos = () =>
   useQuery({

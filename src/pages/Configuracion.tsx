@@ -329,6 +329,7 @@ export default function Configuracion() {
                         <span className="text-xs text-white/40">
                           {c.tipo === 'fijo' ? 'Fijo' : 'Variable'} · {c.frecuencia}
                           {c.moneda === 'USD' && ' · USD'}
+                          {c.porcentaje < 100 && ` · pagás ${c.porcentaje.toLocaleString('es-AR')}%`}
                         </span>
                         <button className="rounded p-1 text-white/40 hover:text-white" onClick={() => setCatModal({ cat: c })} title="Editar">
                           <Pencil className="size-3.5" />
@@ -355,7 +356,7 @@ export default function Configuracion() {
       </Card>
 
       <p className="text-center text-xs text-white/30">
-        {f.gastos.length} gastos · {f.ingresos.length} ingresos · total histórico {fmtMoney(f.gastos.reduce((s, g) => s + f.convertir(g.monto, g.moneda, g.periodo, 'ARS'), 0))}
+        {f.gastos.length} gastos · {f.ingresos.length} ingresos · total histórico {fmtMoney(f.gastos.reduce((s, g) => s + f.convertir(f.miParte(g), g.moneda, g.periodo, 'ARS'), 0))}
       </p>
 
       {grupoModal && (

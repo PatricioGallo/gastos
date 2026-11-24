@@ -100,7 +100,10 @@ export function useFinanzas() {
     }
     const gastosDe = (p: string) => gastosPorPeriodo.get(p) ?? []
 
-    const montoVista = (g: Gasto) => convertir(g.monto, g.moneda, g.periodo)
+    /** Lo que te toca pagar a vos de un gasto (según el % de la categoría). */
+    const miParte = (g: Gasto) => (g.monto * (catById.get(g.categoria_id)?.porcentaje ?? 100)) / 100
+
+    const montoVista = (g: Gasto) => convertir(miParte(g), g.moneda, g.periodo)
 
     const totalMes = (p: string, filtro?: (g: Gasto) => boolean) =>
       gastosDe(p)
@@ -137,7 +140,7 @@ export function useFinanzas() {
       const sumar = (m: Map<string, number>, g: Gasto) => {
         const c = catById.get(g.categoria_id)
         if (!c || c.tipo !== 'fijo' || c.frecuencia !== 'mensual') return
-        m.set(c.id, (m.get(c.id) ?? 0) + convertir(g.monto, g.moneda, g.periodo, 'ARS'))
+        m.set(c.id, (m.get(c.id) ?? 0) + convertir(miParte(g), g.moneda, g.periodo, 'ARS'))
       }
       gastosDe(p).forEach((g) => sumar(actual, g))
       gastosDe(prev).forEach((g) => sumar(anterior, g))
@@ -187,6 +190,7 @@ export function useFinanzas() {
       inflacionInteranual,
       inflacionPersonal,
       gastosDe,
+      miParte,
       totalMes,
       porCategoria,
       porGrupo,

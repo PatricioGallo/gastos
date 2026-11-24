@@ -52,7 +52,7 @@ export default function Anual() {
       const vals = meses
         .map((p) => {
           const gs = f.gastosDe(p).filter((g) => g.categoria_id === c.id)
-          return { p, v: gs.reduce((s, g) => s + f.convertir(g.monto, g.moneda, p, 'ARS'), 0) }
+          return { p, v: gs.reduce((s, g) => s + f.convertir(f.miParte(g), g.moneda, p, 'ARS'), 0) }
         })
         .filter((x) => x.v > 0)
       if (vals.length < 2) return null
