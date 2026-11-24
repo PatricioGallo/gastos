@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from './supabaseClient'
-import type { Categoria, Gasto, Grupo, Indicador, Ingreso } from './types'
+import type { Categoria, Gasto, Grupo, Indicador, Ingreso, Trabajo } from './types'
 
 const PAGE = 1000
 
@@ -36,6 +36,9 @@ export const useGastos = () =>
     queryKey: ['gastos'],
     queryFn: async () => num(await fetchAll<Gasto>('gastos', ['periodo', 'created_at'])),
   })
+
+export const useTrabajos = () =>
+  useQuery({ queryKey: ['trabajos'], queryFn: () => fetchAll<Trabajo>('trabajos', ['orden', 'created_at']) })
 
 export const useIngresos = () =>
   useQuery({

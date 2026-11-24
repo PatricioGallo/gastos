@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { usePrefs } from './prefs'
-import { useCategorias, useGastos, useGrupos, useIndicadores, useIngresos } from './queries'
+import { useCategorias, useGastos, useGrupos, useIndicadores, useIngresos, useTrabajos } from './queries'
 import type { Categoria, Gasto, Grupo, Moneda } from './types'
 import { addMeses, periodo, variacion } from './utils'
 
@@ -24,15 +24,18 @@ export function useFinanzas() {
   const qGastos = useGastos()
   const qIngresos = useIngresos()
   const qIndicadores = useIndicadores()
+  const qTrabajos = useTrabajos()
 
-  const loading = [qGrupos, qCategorias, qGastos, qIngresos, qIndicadores].some((q) => q.isLoading)
-  const error = [qGrupos, qCategorias, qGastos, qIngresos, qIndicadores].find((q) => q.error)?.error ?? null
+  const queries = [qGrupos, qCategorias, qGastos, qIngresos, qIndicadores, qTrabajos]
+  const loading = queries.some((q) => q.isLoading)
+  const error = queries.find((q) => q.error)?.error ?? null
 
   const grupos = qGrupos.data ?? []
   const categorias = qCategorias.data ?? []
   const gastos = qGastos.data ?? []
   const ingresos = qIngresos.data ?? []
   const indicadores = qIndicadores.data ?? []
+  const trabajos = qTrabajos.data ?? []
 
   return useMemo(() => {
     const grupoById = new Map(grupos.map((g) => [g.id, g]))
@@ -153,7 +156,7 @@ export function useFinanzas() {
     // --- ingresos ------------------------------------------------------------
     const ingresosDe = (p: string) => ingresos.filter((i) => i.periodo === p)
     function ingresoMes(p: string, soloSalario = false) {
-      const rows = ingresosDe(p).filter((i) => !soloSalario || i.concepto.toLowerCase() === 'salario')
+      const rows = ingresosDe(p).filter((i) => !soloSalario || i.trabajo_id != null)
       if (!rows.length) return null
       return rows.reduce((s, i) => s + convertir(i.monto, i.moneda, i.periodo), 0)
     }
@@ -172,6 +175,7 @@ export function useFinanzas() {
       gastos,
       ingresos,
       indicadores,
+      trabajos,
       grupoById,
       catById,
       grupoDe,
@@ -192,7 +196,7 @@ export function useFinanzas() {
       periodosConGastos,
       anios,
     }
-  }, [loading, error, vista, tipoDolar, grupos, categorias, gastos, ingresos, indicadores])
+  }, [loading, error, vista, tipoDolar, grupos, categorias, gastos, ingresos, indicadores, trabajos])
 }
 
 export type Finanzas = ReturnType<typeof useFinanzas>

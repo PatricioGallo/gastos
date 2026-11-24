@@ -36,9 +36,19 @@ export interface Gasto {
   nota: string | null
 }
 
+export interface Trabajo {
+  id: string
+  user_id: string
+  nombre: string
+  moneda: Moneda
+  activo: boolean
+  orden: number
+}
+
 export interface Ingreso {
   id: string
   user_id: string
+  trabajo_id: string | null
   periodo: string
   concepto: string
   monto: number
