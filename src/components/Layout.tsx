@@ -59,6 +59,7 @@ export function Layout() {
   const { signOut } = useAuth()
   const { vista, setVista } = usePrefs()
   useBootstrap()
+  const errorDatos = useGrupos().error
 
   return (
     <div className="min-h-dvh pb-24 sm:pb-0">
@@ -102,6 +103,11 @@ export function Layout() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-5 sm:px-6 sm:py-8">
+        {errorDatos && (
+          <div className="mb-5 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+            No se pudieron leer tus datos: {errorDatos.message}
+          </div>
+        )}
         <Outlet />
       </main>
 
