@@ -123,6 +123,7 @@ export function AlquilerCard({ f }: { f: Finanzas }) {
   const actual = tramos.find((t) => t.actual) ?? tramos.filter((t) => !t.futuro).at(-1)
   const proximo = tramos.find((t) => t.futuro)
   const usaIcl = contrato.indice === 'icl'
+  const indiceLabel = usaIcl ? 'ICL' : 'IPC'
   const principal = (t: (typeof tramos)[number]) => (usaIcl ? t.icl : t.ipc)
   const montoContrato = actual ? principal(actual)?.monto ?? null : null
   const pagadoActual = actual?.pagado ?? null
@@ -166,11 +167,11 @@ export function AlquilerCard({ f }: { f: Finanzas }) {
           <div className="text-xs text-white/50">{actual && `${corto(actual.desde)} – ${corto(actual.hasta)}`}</div>
         </div>
         <div className="rounded-2xl bg-white/[0.04] p-3">
-          <div className="text-xs uppercase tracking-wide text-white/50">Con el otro índice</div>
+          <div className="text-xs uppercase tracking-wide text-white/50">Aumento acumulado</div>
           <div className="tabular font-display text-xl font-semibold">
-            {fmtMoney(actual ? (usaIcl ? actual.ipc.monto : actual.icl?.monto) : null)}
+            <Delta value={montoContrato != null ? (montoContrato / contrato.monto - 1) * 100 : null} />
           </div>
-          <div className="text-xs text-white/50">{usaIcl ? 'IPC' : 'ICL'}</div>
+          <div className="text-xs text-white/50">desde {labelPeriodo(contrato.inicio)}</div>
         </div>
         <div className="rounded-2xl bg-white/[0.04] p-3">
           <div className="text-xs uppercase tracking-wide text-white/50">Próximo aumento</div>
@@ -199,21 +200,19 @@ export function AlquilerCard({ f }: { f: Finanzas }) {
         </div>
       </div>
 
-      {icl.isError && (
-        <p className="mb-3 text-xs text-amber-300">No se pudo bajar el ICL del BCRA ahora; se muestra solo el cálculo por IPC.</p>
+      {usaIcl && icl.isError && (
+        <p className="mb-3 text-xs text-amber-300">No se pudo bajar el ICL del BCRA ahora. Probá de nuevo en un rato.</p>
       )}
 
       {tramos.length ? (
         <>
           <div className="overflow-x-auto">
-            <table className="tabular w-full min-w-[620px] text-sm">
+            <table className="tabular w-full min-w-[440px] text-sm">
               <thead className="text-xs text-white/50">
                 <tr>
                   <th className="py-2 text-left font-medium">Período</th>
-                  <th className={cn('py-2 text-right font-medium', !usaIcl && 'text-brand-300')}>Por IPC{!usaIcl && ' ★'}</th>
-                  <th className="py-2 text-right font-medium">Ajuste IPC</th>
-                  <th className={cn('py-2 text-right font-medium', usaIcl && 'text-brand-300')}>Por ICL{usaIcl && ' ★'}</th>
-                  <th className="py-2 text-right font-medium">Ajuste ICL</th>
+                  <th className="py-2 text-right font-medium">Alquiler ({indiceLabel})</th>
+                  <th className="py-2 text-right font-medium">Ajuste</th>
                   <th className="py-2 text-right font-medium">Pagado (prom.)</th>
                 </tr>
               </thead>
@@ -226,28 +225,26 @@ export function AlquilerCard({ f }: { f: Finanzas }) {
                       {t.futuro && <span className="ml-1.5 text-xs text-white/40">próximo</span>}
                     </td>
                     <td className="py-2 text-right">
-                      {fmtMoney(t.ipc.monto)}
-                      {badge(t.ipc.estimado)}
+                      {principal(t) ? fmtMoney(principal(t)!.monto) : '—'}
+                      {principal(t) && badge(principal(t)!.estimado)}
                     </td>
-                    <td className="py-2 text-right">{t.ipc.pct == null ? <span className="text-white/40">inicial</span> : fmtPct(t.ipc.pct)}</td>
                     <td className="py-2 text-right">
-                      {t.icl ? fmtMoney(t.icl.monto) : '—'}
-                      {t.icl && badge(t.icl.estimado)}
+                      {principal(t)?.pct == null ? <span className="text-white/40">{principal(t) ? 'inicial' : '—'}</span> : fmtPct(principal(t)!.pct)}
                     </td>
-                    <td className="py-2 text-right">{t.icl?.pct == null ? <span className="text-white/40">{t.icl ? 'inicial' : '—'}</span> : fmtPct(t.icl.pct)}</td>
                     <td className="py-2 text-right text-white/80">{fmtMoney(t.pagado)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <p className="mt-2 text-xs text-white/40">★ índice de tu contrato. "Estimado": usa meses de IPC sin publicar o ICL futuro, proyectados con la tendencia reciente.</p>
+            <p className="mt-2 text-xs text-white/40">
+              "Estimado": usa {usaIcl ? 'valores futuros del ICL' : 'meses de IPC todavía sin publicar'}, proyectados con la tendencia reciente.
+            </p>
           </div>
           <div className="mt-5">
             <Lines
               data={datos}
               series={[
-                { key: 'ipc', name: 'Contrato por IPC', color: '#3987e5' },
-                { key: 'icl', name: 'Contrato por ICL', color: '#d95926' },
+                { key: contrato.indice, name: `Contrato (${indiceLabel})`, color: '#3987e5' },
                 ...(contrato.categoria_id ? [{ key: 'pagado', name: 'Lo que pagaste', color: '#199e70' }] : []),
               ]}
               fmt={(n) => fmtMoney(n)}
