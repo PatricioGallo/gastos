@@ -9,6 +9,7 @@ const FUENTES_DOLAR: { tipo: TipoIndicador; casa: string }[] = [
   { tipo: 'dolar_blue', casa: 'blue' },
   { tipo: 'dolar_mep', casa: 'bolsa' },
   { tipo: 'dolar_oficial', casa: 'oficial' },
+  { tipo: 'dolar_cripto', casa: 'cripto' },
 ]
 
 async function getJson<T>(path: string): Promise<T> {

@@ -1,7 +1,7 @@
 export type Moneda = 'ARS' | 'USD'
 export type TipoCategoria = 'fijo' | 'variable'
 export type Frecuencia = 'mensual' | 'bimestral' | 'trimestral' | 'anual' | 'eventual'
-export type TipoDolar = 'dolar_oficial' | 'dolar_blue' | 'dolar_mep'
+export type TipoDolar = 'dolar_oficial' | 'dolar_blue' | 'dolar_mep' | 'dolar_cripto'
 export type TipoIndicador = 'ipc' | TipoDolar
 
 export interface Grupo {
@@ -77,4 +77,5 @@ export const DOLARES: { value: TipoDolar; label: string }[] = [
   { value: 'dolar_blue', label: 'Blue' },
   { value: 'dolar_mep', label: 'MEP' },
   { value: 'dolar_oficial', label: 'Oficial' },
+  { value: 'dolar_cripto', label: 'Cripto' },
 ]

@@ -45,7 +45,8 @@ function useBootstrap() {
 
   useEffect(() => {
     if (!session || synced.current || !indicadores.isSuccess) return
-    if (indicadores.data.length && !haceFaltaSincronizar()) return
+    const falta = !indicadores.data.some((i) => i.tipo === 'dolar_cripto')
+    if (indicadores.data.length && !falta && !haceFaltaSincronizar()) return
     synced.current = true
     sincronizarIndicadores(session.user.id, indicadores.data)
       .then(() => invalidate('indicadores'))

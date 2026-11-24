@@ -174,11 +174,13 @@ export default function Inflacion() {
             dolar_blue: val(p, 'dolar_blue')?.valor ?? null,
             dolar_mep: val(p, 'dolar_mep')?.valor ?? null,
             dolar_oficial: val(p, 'dolar_oficial')?.valor ?? null,
+            dolar_cripto: val(p, 'dolar_cripto')?.valor ?? null,
           }))}
           series={[
             { key: 'dolar_blue', name: 'Blue', color: '#3987e5' },
             { key: 'dolar_mep', name: 'MEP', color: '#d95926' },
             { key: 'dolar_oficial', name: 'Oficial', color: '#199e70' },
+            { key: 'dolar_cripto', name: 'Cripto', color: '#c98500' },
           ]}
           fmt={(n) => fmtMoney(n)}
           fmtAxis={(n) => `$${Math.round(n)}`}
@@ -190,7 +192,7 @@ export default function Inflacion() {
           Datos {anio}
         </CardTitle>
         <div className="overflow-x-auto">
-          <table className="tabular w-full min-w-[560px] text-sm">
+          <table className="tabular w-full min-w-[640px] text-sm">
             <thead className="text-xs text-white/50">
               <tr>
                 <th className="py-2 text-left font-medium">Mes</th>
@@ -199,6 +201,7 @@ export default function Inflacion() {
                 <th className="py-2 text-right font-medium">Blue</th>
                 <th className="py-2 text-right font-medium">MEP</th>
                 <th className="py-2 text-right font-medium">Oficial</th>
+                <th className="py-2 text-right font-medium">Cripto</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -211,7 +214,7 @@ export default function Inflacion() {
                     </td>
                   ))}
                   <td className="py-1 pr-2 text-right"><Delta value={f.inflacionPersonal(p)} /></td>
-                  {(['dolar_blue', 'dolar_mep', 'dolar_oficial'] as const).map((t) => (
+                  {(['dolar_blue', 'dolar_mep', 'dolar_oficial', 'dolar_cripto'] as const).map((t) => (
                     <td key={t} className="py-1 text-right">
                       <CeldaIndicador periodo={p} tipo={t} valor={val(p, t)?.valor ?? null} manual={!!val(p, t)?.manual} />
                     </td>
