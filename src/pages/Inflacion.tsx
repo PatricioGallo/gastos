@@ -12,6 +12,7 @@ import { MESES, MESES_CORTOS, fmtMoney, fmtPct, mesesDelAnio, parseMonto, parseP
 import { PageHeader, YearPicker } from '@/components/Pickers'
 import { Button, Card, CardTitle, Delta, Spinner, Stat } from '@/components/ui'
 import { GroupedBars, Lines } from '@/components/Charts'
+import { AlquilerCard } from '@/components/AlquilerCard'
 
 function CeldaIndicador({ periodo, tipo, valor, manual, pct }: { periodo: string; tipo: TipoIndicador; valor: number | null; manual: boolean; pct?: boolean }) {
   const invalidate = useInvalidate()
@@ -135,6 +136,8 @@ export default function Inflacion() {
           hint="Suba de tus gastos fijos mensuales"
         />
       </div>
+
+      <AlquilerCard f={f} />
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Card>

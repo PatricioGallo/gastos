@@ -33,7 +33,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => url.hostname === 'api.argentinadatos.com',
+            urlPattern: ({ url }) => url.hostname === 'api.argentinadatos.com' || url.hostname === 'api.bcra.gob.ar',
             handler: 'StaleWhileRevalidate',
             options: { cacheName: 'indicadores-api' },
           },
