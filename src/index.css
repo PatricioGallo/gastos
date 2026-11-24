@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap");
+@import "tailwindcss";
+
+@custom-variant standalone (@media (display-mode: standalone));
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-300: #6ee7b7;
+  --color-brand-400: #34d399;
+  --color-brand-500: #10b981;
+  --color-brand-600: #059669;
+
+  --color-bg-950: #05070f;
+  --color-bg-900: #0b0f1e;
+  --color-bg-800: #10142a;
+
+  --color-surface-800: #131829;
+  --color-surface-700: #1a2038;
+  --color-surface-600: #232a47;
+
+  --color-up: #f87171;
+  --color-down: #34d399;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-bg-900 font-sans text-white antialiased;
+  background-image:
+    radial-gradient(60rem 30rem at 10% -10%, rgb(16 185 129 / 0.08), transparent 60%),
+    radial-gradient(50rem 30rem at 110% 10%, rgb(99 102 241 / 0.08), transparent 60%);
+  background-attachment: fixed;
+  min-height: 100dvh;
+}
+
+@layer components {
+  .glass-panel {
+    @apply rounded-3xl border border-white/8 bg-surface-800/70 shadow-xl shadow-black/20 backdrop-blur;
+  }
+  .input {
+    @apply w-full rounded-xl border border-white/10 bg-bg-800 px-3 py-2.5 text-white outline-none transition placeholder:text-white/30 focus:border-brand-500/60 focus:ring-2 focus:ring-brand-500/20;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-brand-500 px-5 py-2.5 font-semibold text-bg-950 transition hover:bg-brand-400 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 font-medium text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Inputs numéricos sin flechitas */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
